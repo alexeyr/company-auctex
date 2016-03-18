@@ -256,8 +256,16 @@
 ;; Refs
 ;;
 
+(defun company-auctex-label-list ()
+  ;; See `reftex-goto-label'
+  (reftex-access-scan-info)
+  (let (res)
+    (dolist (item (symbol-value reftex-docstruct-symbol) res)
+      (when (stringp (car-safe item))
+        (push (list (car item)) res)))))
+
 (defun company-auctex-label-candidates (prefix)
-  (all-completions prefix (mapcar 'car (LaTeX-label-list))))
+  (all-completions prefix (mapcar 'car (company-auctex-label-list))))
 
 ;;;###autoload
 (defun company-auctex-labels (command &optional arg &rest ignored)
